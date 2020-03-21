@@ -46,9 +46,6 @@ namespace reasoner {
                 moves.push_back(piece | piece << 9);
                 movers ^= piece;
             }
-            if (moves.empty()) {
-                variables[1] = 100;
-            }
         }
         else {
             uint64_t not_black = ~pieces[1];
@@ -70,9 +67,9 @@ namespace reasoner {
                 moves.push_back(piece | piece >> 7);
                 movers ^= piece;
             }
-            if (moves.empty()) {
-                variables[0] = 100;
-            }
+        }
+        if (moves.empty()) {
+            variables[current_player - 1] = 100;
         }
     }
 
