@@ -17,9 +17,6 @@ namespace reasoner {
         move_representation mr;
         move(const move_representation& mv) : mr(mv) {};
         move(void) = default;
-        bool operator==(const move& rhs) const {
-            return mr == rhs.mr;
-        }
     };
     class game_state {
         public:
