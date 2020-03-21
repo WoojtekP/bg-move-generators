@@ -37,10 +37,7 @@ namespace reasoner {
             uint64_t last_row[2] = {0xFF00000000000000, 0xFF};
             const uint64_t maskLD = 0xFEFEFEFEFEFEFEFE;
             const uint64_t maskRD = 0x7F7F7F7F7F7F7F7F;
-            int winner = 0;
-            int current_cell = 1;
             int current_player = WHITE;
-            int current_state = 0;
             int variables[2] = {0, 0};
     };
 }
