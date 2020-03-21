@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -Wall -Wextra -Wpedantic -Ofast -march=native -std=c++17 -flto
 
-GAMES = breakthrough connect4 draughts
+GAMES = breakthrough connect4 english_draughts
 
 all: $(GAMES)
 
@@ -19,11 +19,11 @@ connect4: connect4.o benchmark_flatmc.cpp
 connect4.o: connect4.cpp connect4.hpp
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-# draughts
-draughts: draughts.o benchmark_flatmc.cpp
+# english_draughts
+english_draughts: english_draughts.o benchmark_flatmc.cpp
 	$(CC) -DENGDRAUGHTS $(CFLAGS) -o $@ $^
 
-draughts.o: english_draughts.cpp english_draughts.hpp
+english_draughts.o: english_draughts.cpp english_draughts.hpp
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
