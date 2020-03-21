@@ -1,4 +1,4 @@
-#include "reasoner.hpp"
+#include "breakthrough.hpp"
 
 namespace reasoner {
     int game_state::get_current_player(void) const {
