@@ -1,6 +1,3 @@
-#ifndef REASONER
-#define REASONER
-
 #include <cstdint>
 #include <vector>
 
@@ -35,5 +32,3 @@ namespace reasoner {
             int column_shift[7] = {0, 1, 2, 3, 4, 5, 6};
     };
 }
-
-#endif
