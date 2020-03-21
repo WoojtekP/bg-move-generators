@@ -18,10 +18,6 @@ namespace reasoner {
         move(const move_representation& mv) : mr(mv) {};
         move(void) = default;
     };
-    struct line_matcher {
-        uint8_t s1;
-        uint8_t s2;
-    };
     class game_state {
         public:
             int get_current_player(void)const;

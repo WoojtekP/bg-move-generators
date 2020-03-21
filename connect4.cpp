@@ -14,17 +14,12 @@ namespace reasoner {
         tokens |= 1ull << column_shift[m.mr];
         column_shift[m.mr] += 8;
 
-        static constexpr line_matcher shift[] = {
-            {1, 2},  // row
-            {8, 16},  // column
-            {7, 14},  // left diagonal
-            {9, 18}  // righ diagonal
-        };
+        static constexpr int shift[] = {1, 7, 8, 9};
 
         uint64_t result = 0;
         for (int i = 0; i < 4; ++i) {
-            uint64_t tokenstmp = tokens & (tokens >> shift[i].s2);
-            result |= tokenstmp & (tokenstmp >> shift[i].s1);
+            uint64_t tokenstmp = tokens & (tokens >> 2*shift[i]);
+            result |= tokenstmp & (tokenstmp >> shift[i]);
         }
         if (result) {
             variables[current_player - 1] = 100;
