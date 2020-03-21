@@ -7,6 +7,7 @@
 namespace reasoner {
     constexpr int NUMBER_OF_PLAYERS = 3;
     constexpr int MONOTONIC_CLASSES = 1;
+    constexpr int KEEPER = 0;
     constexpr int RED = 1;
     constexpr int YELLOW = 2;
 

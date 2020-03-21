@@ -23,8 +23,7 @@ namespace reasoner {
         }
         if (result) {
             variables[current_player - 1] = 100;
-            variables[current_player & 1] = 0;
-            current_player = 0;
+            current_player = KEEPER;
             return;
         }
         current_player ^= 0b11;
