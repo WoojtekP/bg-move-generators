@@ -10,71 +10,61 @@ namespace reasoner {
     }
 
     void game_state::apply_move(const move& mv) {
-        if (current_player == WHITE) {
-            white ^= mv.mr;
-            black &= ~mv.mr;
-            if (white & 0xFF00000000000000) {
-                winner = WHITE;
-            }
-            current_player = BLACK;
+        auto curr_id = current_player - 1;
+        auto opp_id = current_player & 1;
+        pieces[curr_id] ^= mv.mr;
+        pieces[opp_id] &= ~mv.mr;
+        if (pieces[curr_id] & last_row[curr_id]) {
+            variables[curr_id] = 100;
+            current_player = KEEPER;
         }
         else {
-            black ^= mv.mr;
-            white &= ~mv.mr;
-            if (black & 0xFF) {
-                winner = BLACK;
-            }
-            current_player = WHITE;
+            current_player ^= 0b11;
         }
-        empty = ~(white | black);
+        empty = ~(pieces[0] | pieces[1]);
     }
 
     void game_state::get_all_moves(resettable_bitarray_stack&, std::vector<move>& moves) {
         moves.clear();
-        if (winner) {
-            variables[winner-1] = 100;
-            return;
-        }
         if (current_player == WHITE) {
-            uint64_t not_white = ~white;
-            uint64_t movers = white & (empty >> 8);
+            uint64_t not_white = ~pieces[0];
+            uint64_t movers = pieces[0] & (empty >> 8);
             while (movers) {
                 auto piece = msb(movers);
                 moves.push_back(piece | piece << 8);
                 movers ^= piece;
             }
-            movers = white & maskLD & (not_white >> 7);
+            movers = pieces[0] & maskLD & (not_white >> 7);
             while (movers) {
                 auto piece = msb(movers);
                 moves.push_back(piece | piece << 7);
                 movers ^= piece;
             }
-            movers = white & maskRD & (not_white >> 9);
+            movers = pieces[0] & maskRD & (not_white >> 9);
             while (movers) {
                 auto piece = msb(movers);
                 moves.push_back(piece | piece << 9);
                 movers ^= piece;
             }
             if (moves.empty()) {
-                variables[0] = 0;
                 variables[1] = 100;
             }
         }
         else {
-            uint64_t not_black = ~black;
-            uint64_t movers = black & (empty << 8);
+            uint64_t not_black = ~pieces[1];
+            uint64_t movers = pieces[1] & (empty << 8);
             while (movers) {
                 auto piece = msb(movers);
                 moves.push_back(piece | piece >> 8);
                 movers ^= piece;
             }
-            movers = black & maskLD & (not_black << 9);
+            movers = pieces[1] & maskLD & (not_black << 9);
             while (movers) {
                 auto piece = msb(movers);
                 moves.push_back(piece | piece >> 9);
                 movers ^= piece;
             }
-            movers = black & maskRD & (not_black << 7);
+            movers = pieces[1] & maskRD & (not_black << 7);
             while (movers) {
                 auto piece = msb(movers);
                 moves.push_back(piece | piece >> 7);
@@ -82,7 +72,6 @@ namespace reasoner {
             }
             if (moves.empty()) {
                 variables[0] = 100;
-                variables[1] = 0;
             }
         }
     }
