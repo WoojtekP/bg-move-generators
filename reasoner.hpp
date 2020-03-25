@@ -4,4 +4,6 @@
   #include "connect4.hpp"
 #elif defined(ENGDRAUGHTS)
   #include "english_draughts.hpp"
+#elif defined(REVERSI)
+  #include "reversi.hpp"
 #endif
