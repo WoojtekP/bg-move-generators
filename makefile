@@ -1,5 +1,11 @@
-CC = g++
-CFLAGS = -Wall -Wextra -Wpedantic -Ofast -march=native -std=c++17 -flto
+CXX = g++
+FLAGS = -Wall -Wextra -Wpedantic -Ofast -march=native -std=c++17 -flto
+
+ifdef fastrand
+	CPPFLAGS = -DFASTRAND $(FLAGS)
+else
+	CPPFLAGS = $(FLAGS)
+endif
 
 GAMES = breakthrough connect4 english_draughts reversi
 
@@ -7,22 +13,22 @@ all: $(GAMES)
 
 # breakthrough
 breakthrough: breakthrough.o benchmark_flatmc.cpp
-	$(CC) -DBREAKTHROUGH $(CFLAGS) -o $@ $^
+	$(CXX) -DBREAKTHROUGH $(CPPFLAGS) -o $@ $^
 
 # connect4
 connect4: connect4.o benchmark_flatmc.cpp
-	$(CC) -DCONNECT4 $(CFLAGS) -o $@ $^
+	$(CXX) -DCONNECT4 $(CPPFLAGS) -o $@ $^
 
 # english_draughts
 english_draughts: english_draughts.o benchmark_flatmc.cpp
-	$(CC) -DENGDRAUGHTS $(CFLAGS) -o $@ $^
+	$(CXX) -DENGDRAUGHTS $(CPPFLAGS) -o $@ $^
 
 # reversi
 reversi: reversi.o benchmark_flatmc.cpp
-	$(CC) -DREVERSI $(CFLAGS) -o $@ $^
+	$(CXX) -DREVERSI $(CPPFLAGS) -o $@ $^
 
 %.o: %.cpp %.hpp
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CXX) $(CPPFLAGS) -c -o $@ $<
 
 clean:
 	rm -f $(GAMES) *.o

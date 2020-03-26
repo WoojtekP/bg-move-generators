@@ -8,10 +8,18 @@ typedef unsigned int uint;
 typedef unsigned long ulong;
 constexpr int KEEPER = 0;
 
+#if defined(FASTRAND)
+inline uint random_choice(const uint upper_bound) {
+    static unsigned int g_seed = 1;
+    g_seed = (214013 * g_seed + 2531011);
+    return ((g_seed >> 16) & 0x7FFF) % upper_bound;
+}
+#else
 std::mt19937 random_generator(1);
 inline uint random_choice(const uint upper_bound) {
     return std::uniform_int_distribution<uint>(0,upper_bound-1)(random_generator);
 }
+#endif
 
 ulong states_count = 0;
 ulong goals_avg[reasoner::NUMBER_OF_PLAYERS] = {};
