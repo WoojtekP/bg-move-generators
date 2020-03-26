@@ -7,7 +7,7 @@ namespace reasoner {
 
     class resettable_bitarray_stack {};
 
-    typedef uint64_t move_representation;
+    typedef uint32_t move_representation;
     struct move {
         move_representation mr;
         move(const move_representation& mv) : mr(mv) {};
@@ -90,9 +90,8 @@ namespace reasoner {
             inline uint64_t down_right(const uint64_t& pieces) const {
                 return (pieces & 0xFEFEFEFEFEFEFEFEull) >> 9;
             }
-            inline uint64_t msb(const uint64_t& pieces) const {
-                auto k = 63 - __builtin_clzll(pieces);
-                return 1ull << k;
+            inline uint32_t msb(const uint64_t& pieces) const {
+                return 63 - __builtin_clzll(pieces);
             }
             uint64_t pieces[2] = {
                 0x1008000000ull,

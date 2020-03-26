@@ -10,19 +10,20 @@ namespace reasoner {
     }
 
     void game_state::apply_move(const move& mv) {
-        if (mv.mr == 0) {
+        if (mv.mr == 64) {
             current_player ^= 0b11;
             return;
         }
+        uint64_t move_mask = 1ull << mv.mr;
         auto curr_id = current_player - 1;
         auto opp_id = current_player & 1;
-        pieces[curr_id] ^= mv.mr;
-        empty ^= mv.mr;
+        pieces[curr_id] ^= move_mask;
+        empty ^= move_mask;
         uint64_t flipped = 0;
         uint64_t &current = pieces[curr_id];
         uint64_t &opponent = pieces[opp_id];
 
-        flipped = up(mv.mr) & opponent;
+        flipped = up(move_mask) & opponent;
         for (int j = 0; j < 5; ++j)
             flipped |= up(flipped) & opponent;
         if (up(flipped) & current) {
@@ -30,7 +31,7 @@ namespace reasoner {
             opponent ^= flipped;
         }
 
-        flipped = down(mv.mr) & opponent;
+        flipped = down(move_mask) & opponent;
         for (int j = 0; j < 5; ++j)
             flipped |= down(flipped) & opponent;
         if (down(flipped) & current) {
@@ -38,7 +39,7 @@ namespace reasoner {
             opponent ^= flipped;
         }
 
-        flipped = left(mv.mr) & opponent;
+        flipped = left(move_mask) & opponent;
         for (int j = 0; j < 5; ++j)
             flipped |= left(flipped) & opponent;
         if (left(flipped) & current) {
@@ -46,7 +47,7 @@ namespace reasoner {
             opponent ^= flipped;
         }
 
-        flipped = right(mv.mr) & opponent;
+        flipped = right(move_mask) & opponent;
         for (int j = 0; j < 5; ++j)
             flipped |= right(flipped) & opponent;
         if (right(flipped) & current) {
@@ -54,7 +55,7 @@ namespace reasoner {
             opponent ^= flipped;
         }
 
-        flipped = up_left(mv.mr) & opponent;
+        flipped = up_left(move_mask) & opponent;
         for (int j = 0; j < 5; ++j)
             flipped |= up_left(flipped) & opponent;
         if (up_left(flipped) & current) {
@@ -62,7 +63,7 @@ namespace reasoner {
             opponent ^= flipped;
         }
 
-        flipped = up_right(mv.mr) & opponent;
+        flipped = up_right(move_mask) & opponent;
         for (int j = 0; j < 5; ++j)
             flipped |= up_right(flipped) & opponent;
         if (up_right(flipped) & current) {
@@ -70,7 +71,7 @@ namespace reasoner {
             opponent ^= flipped;
         }
 
-        flipped = down_left(mv.mr) & opponent;
+        flipped = down_left(move_mask) & opponent;
         for (int j = 0; j < 5; ++j)
             flipped |= down_left(flipped) & opponent;
         if (down_left(flipped) & current) {
@@ -78,7 +79,7 @@ namespace reasoner {
             opponent ^= flipped;
         }
 
-        flipped = down_right(mv.mr) & opponent;
+        flipped = down_right(move_mask) & opponent;
         for (int j = 0; j < 5; ++j)
             flipped |= down_right(flipped) & opponent;
         if (down_right(flipped) & current) {
@@ -100,7 +101,7 @@ namespace reasoner {
         while (result) {
             auto piece = msb(result);
             moves.push_back(piece);
-            result ^= piece;
+            result ^= 1ull << piece;
         }
 
         if (moves.empty()) {
@@ -118,7 +119,7 @@ namespace reasoner {
                 }
             }
             else {
-                moves.push_back(0);
+                moves.push_back(64);
             }
         }
     }
