@@ -16,7 +16,7 @@ namespace reasoner {
         pieces[opp_id] &= ~mv.mr;
         if (pieces[curr_id] & last_row[curr_id]) {
             variables[curr_id] = 100;
-            current_player = KEEPER;
+            current_player = 0;
         }
         else {
             current_player ^= 0b11;
@@ -26,7 +26,7 @@ namespace reasoner {
 
     void game_state::get_all_moves(resettable_bitarray_stack&, std::vector<move>& moves) {
         moves.clear();
-        if (current_player == WHITE) {
+        if (current_player == 1) {
             uint64_t not_white = ~pieces[0];
             uint64_t movers = pieces[0] & (empty >> 8);
             while (movers) {

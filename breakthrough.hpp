@@ -4,9 +4,6 @@
 namespace reasoner {
     constexpr int NUMBER_OF_PLAYERS = 3;
     constexpr int MONOTONIC_CLASSES = 0;
-    constexpr int KEEPER = 0;
-    constexpr int WHITE = 1;
-    constexpr int BLACK = 2;
 
     class resettable_bitarray_stack {};
 
@@ -32,7 +29,7 @@ namespace reasoner {
             uint64_t last_row[2] = {0xFF00000000000000, 0xFF};
             const uint64_t maskLD = 0xFEFEFEFEFEFEFEFE;
             const uint64_t maskRD = 0x7F7F7F7F7F7F7F7F;
-            int current_player = WHITE;
+            int current_player = 1;
             int variables[2] = {0, 0};
     };
 }
