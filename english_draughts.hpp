@@ -4,8 +4,6 @@
 namespace reasoner {
     constexpr int NUMBER_OF_PLAYERS = 3;
     constexpr int MONOTONIC_CLASSES = 0;
-    constexpr int WHITE = 1;
-    constexpr int BLACK = 2;
 
     class resettable_bitarray_stack {};
 
@@ -36,14 +34,14 @@ namespace reasoner {
             inline void get_jump_list_down(uint32_t, const uint32_t&, std::vector<move>&);
             inline uint32_t msb(const uint32_t&) const;
             std::pair<uint32_t, const uint32_t> pieces[2] = {
-                { 0x00000FFF, 0xF0000000 },  // white, last row
-                { 0xFFF00000, 0x0000000F }  // black, last row
+                { 0xFFF00000, 0x0000000F },  // black, last row
+                { 0x00000FFF, 0xF0000000 }   // white, last row
             };
             uint32_t kings = 0x00000000;
             uint32_t empty = 0x000FF000;
             uint32_t obligatory_jumper = 0x0;
             int king_moves = 0;
-            int current_player = BLACK;
-            int variables[2] = {0, 0};
+            int current_player = 1;
+            int variables[2] = {50, 50};
     };
 }

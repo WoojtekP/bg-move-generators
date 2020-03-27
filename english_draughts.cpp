@@ -12,9 +12,11 @@ namespace reasoner {
     void game_state::apply_move(const move& mv) {
         obligatory_jumper = 0;
         uint32_t movemask = mv.mr;
-        uint32_t current = pieces[current_player - 1].first;
-        uint32_t opponent = pieces[current_player & 1].first;
-        uint32_t last_row = pieces[current_player - 1].second;
+        int curr_id = current_player - 1;
+        int opp_id = current_player & 1;
+        uint32_t current = pieces[curr_id].first;
+        uint32_t opponent = pieces[opp_id].first;
+        uint32_t last_row = pieces[curr_id].second;
 
         if ((movemask & current & kings) && !(movemask & opponent)) {
             king_moves++;
@@ -38,25 +40,25 @@ namespace reasoner {
         
         promotion = promotion && (current & movemask & kings);
 
-        pieces[current_player - 1].first = current;
-        pieces[current_player & 1].first = opponent;
+        pieces[curr_id].first = current;
+        pieces[opp_id].first = opponent;
 
-        if (current_player == WHITE) {
-            if ((opponent != old_opponent) && !promotion) {
-                obligatory_jumper = get_jumpers_up(current & movemask, opponent);
-                obligatory_jumper |= get_jumpers_down(current & movemask & kings, opponent);
-            }
-            if (!obligatory_jumper) {
-                current_player = BLACK;
-            }
-        }
-        else {
+        if (current_player == 1) {
             if ((opponent != old_opponent) && !promotion) {
                 obligatory_jumper = get_jumpers_down(current & movemask, opponent);
                 obligatory_jumper |= get_jumpers_up(current & movemask & kings, opponent);
             }
             if (!obligatory_jumper) {
-                current_player = WHITE;
+                current_player = 2;
+            }
+        }
+        else {
+            if ((opponent != old_opponent) && !promotion) {
+                obligatory_jumper = get_jumpers_up(current & movemask, opponent);
+                obligatory_jumper |= get_jumpers_down(current & movemask & kings, opponent);
+            }
+            if (!obligatory_jumper) {
+                current_player = 1;
             }
         }
     }
@@ -64,16 +66,15 @@ namespace reasoner {
     void game_state::get_all_moves(resettable_bitarray_stack&, std::vector<move>& moves) {
         moves.clear();
         if (king_moves >= 20) {
-            variables[0] = variables[1] = 50;
             return;
         }
-        
+
         uint32_t enemies = pieces[current_player & 1].first;
-        uint32_t piecesU = pieces[0].first;
-        uint32_t piecesD = piecesU & kings;
-        if (current_player == BLACK) {
-            piecesD = pieces[1].first;
-            piecesU = piecesD & kings;
+        uint32_t piecesD = pieces[0].first;
+        uint32_t piecesU = piecesD & kings;
+        if (current_player == 2) {
+            piecesU = pieces[1].first;
+            piecesD = piecesU & kings;
         }
         
         if (obligatory_jumper) {
@@ -149,7 +150,6 @@ namespace reasoner {
     bool game_state::is_legal([[maybe_unused]] const move& m) const {
         return false;
     }
-
 
     inline uint32_t game_state::get_jumpers_down(const uint32_t& pieces, const uint32_t& enemies) const {
         if (pieces == 0)
