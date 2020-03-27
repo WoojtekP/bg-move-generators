@@ -4,9 +4,6 @@
 namespace reasoner {
     constexpr int NUMBER_OF_PLAYERS = 3;
     constexpr int MONOTONIC_CLASSES = 1;
-    constexpr int KEEPER = 0;
-    constexpr int RED = 1;
-    constexpr int YELLOW = 2;
 
     class resettable_bitarray_stack {};
 
@@ -27,8 +24,8 @@ namespace reasoner {
             bool is_legal(const move& m)const;
         private:
             uint64_t pieces[2] = {0};
-            int current_player = RED;
-            int variables[2] = {0, 0};
-            int column_shift[7] = {0, 1, 2, 3, 4, 5, 6};
+            int current_player = 1;
+            int variables[2] = {50, 50};
+            uint64_t column[7] = {1, 1<<1, 1<<2, 1<<3, 1<<4, 1<<5, 1<<6};
     };
 }
