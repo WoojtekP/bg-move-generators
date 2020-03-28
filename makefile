@@ -1,6 +1,8 @@
 CXX = g++
 CPPFLAGS = -DRBG_RANDOM_GENERATOR=$(RANDGEN) -Wall -Wextra -Wpedantic -Ofast -march=native -std=c++17 -flto
 
+RANDGEN := 0
+
 GAMES = breakthrough connect4 english_draughts_split reversi
 
 all: $(GAMES)

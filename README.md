@@ -1,5 +1,4 @@
-# board games move generators
-Fast move generators for various board games.
+# RBG game specific reasoners
 
 ### Games
 * breakthrough
