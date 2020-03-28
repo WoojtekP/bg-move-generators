@@ -1,6 +1,15 @@
 #!/bin/bash
 
-mkdir logs
+if [[ $# < 2 ]]
+then
+    echo "Incorrect number of parameters"
+    exit 1
+fi
+
+if [[ ! -d logs ]]
+then
+    mkdir logs
+fi
 
 if [[ $3 == 1 ]] || [[ $3 == 2 ]]; then
 randgen=$3
