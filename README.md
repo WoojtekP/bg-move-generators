@@ -4,7 +4,7 @@ Fast move generators for various board games.
 ### Games
 * breakthrough
 * connect4
-* english draughts
+* english draughts (split)
 * reversi
 
 ### Testing
