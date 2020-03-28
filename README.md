@@ -15,7 +15,7 @@ Usage:
 ./run_benchamark [game] [time] [random_generator]
 ```
 `game` - the name of the game\
-`time` - time in microseconds (without preprocessing)
+`time` - time in microseconds (without preprocessing)\
 `random_generator` - random generator id
 * 1 - reimplementation of the Java standard generator
 * 2 - Lemire's enhanced method
