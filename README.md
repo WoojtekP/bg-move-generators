@@ -3,6 +3,7 @@
 ### Games
 * breakthrough
 * connect4
+* english draughts
 * english draughts (split)
 * reversi
 

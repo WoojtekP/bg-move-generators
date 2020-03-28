@@ -6,7 +6,9 @@ then
     exit 1
 fi
 
+make clean
 ./run_benchmark.sh breakthrough $1 $2
 ./run_benchmark.sh connect4 $1 $2
 ./run_benchmark.sh english_draughts_split $1 $2
+./run_benchmark.sh english_draughts $1 $2
 ./run_benchmark.sh reversi $1 $2
