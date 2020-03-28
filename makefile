@@ -1,11 +1,5 @@
 CXX = g++
-FLAGS = -Wall -Wextra -Wpedantic -Ofast -march=native -std=c++17 -flto
-
-ifdef fastrand
-	CPPFLAGS = -DFASTRAND $(FLAGS)
-else
-	CPPFLAGS = $(FLAGS)
-endif
+CPPFLAGS = -DRBG_RANDOM_GENERATOR=$(RANDGEN) -Wall -Wextra -Wpedantic -Ofast -march=native -std=c++17 -flto
 
 GAMES = breakthrough connect4 english_draughts reversi
 
