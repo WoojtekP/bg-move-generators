@@ -1,4 +1,4 @@
-#include "english_draughts.hpp"
+#include "english_draughts_split.hpp"
 
 namespace reasoner {
     int game_state::get_current_player(void) const {

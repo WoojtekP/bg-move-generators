@@ -13,9 +13,9 @@ breakthrough: breakthrough.o benchmark_flatmc.cpp
 connect4: connect4.o benchmark_flatmc.cpp
 	$(CXX) -DCONNECT4 $(CPPFLAGS) -o $@ $^
 
-# english_draughts
-english_draughts: english_draughts.o benchmark_flatmc.cpp
-	$(CXX) -DENGDRAUGHTS $(CPPFLAGS) -o $@ $^
+# english_draughts (split)
+english_draughts_split: english_draughts_split.o benchmark_flatmc.cpp
+	$(CXX) -DENGDRAUGHTSSPLIT $(CPPFLAGS) -o $@ $^
 
 # reversi
 reversi: reversi.o benchmark_flatmc.cpp
