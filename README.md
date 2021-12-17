@@ -22,11 +22,13 @@ Usage:
 ./run_benchamark [game] [time] [random_generator]
 ```
 `game` - the name of the game\
-`time` - time in microseconds (without preprocessing)\
+`time` - time in miliseconds (without preprocessing)\
 `random_generator` - random generator id
-* 1 - reimplementation of the Java standard generator
-* 2 - Lemire's enhanced method
-* other - `std::mt19937`
+* 0 -- `std::mt19937` with Lemire's method (unbiased)
+* 1 -- `std::mt19937` with `std::uniform_int_distribution` (the standard unbiased method)
+* 2 -- Java's algorithm (lcg48, unbiased)
+* 3 -- lcg48 with multiplication method (biased)
+* 4 -- xorShift64 with multiplication method (biased)
 
 Then you can run test again: `./[game] [time]`
 
