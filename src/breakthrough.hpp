@@ -2,7 +2,10 @@
 #include <vector>
 
 namespace reasoner {
+    constexpr int BOARD_SIZE = 64;
     constexpr int NUMBER_OF_PLAYERS = 3;
+    constexpr int NUMBER_OF_PIECES = 3;
+    constexpr int NUMBER_OF_VARIABLES = 2;
     constexpr int MONOTONIC_CLASSES = 0;
 
     class resettable_bitarray_stack {};
@@ -15,6 +18,8 @@ namespace reasoner {
     };
     class game_state {
         public:
+            int get_piece(int cell_id) const;
+            int get_variable_value(int variable_id) const;
             int get_current_player(void) const;
             int get_player_score(int player_id) const;
             void apply_move(const move& m);

@@ -1,6 +1,22 @@
 #include "breakthrough.hpp"
 
 namespace reasoner {
+    int game_state::get_piece(int cell_id) const {
+        // 0 -black, 1 - empty, 2 - white
+        const uint64_t cell_mask = 1ull << (cell_id - 1);
+        if (pieces[0] & cell_mask) {
+            return 2;
+        }
+        if (pieces[1] & cell_mask) {
+            return 0;
+        }
+        return 1;
+    }
+
+    int game_state::get_variable_value(int variable_id) const {
+        return variables[variable_id];
+    }
+
     int game_state::get_current_player(void) const {
         return current_player;
     }
