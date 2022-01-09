@@ -1,6 +1,22 @@
 #include "reversi.hpp"
 
 namespace reasoner {
+    int game_state::get_piece(int cell_id) const {
+        // 0 -black, 1 - empty, 2 - white
+        const uint64_t cell_mask = 1ull << (cell_id - 1);
+        if (pieces[0] & cell_mask) {
+            return 2;
+        }
+        if (pieces[1] & cell_mask) {
+            return 0;
+        }
+        return 1;
+    }
+
+    int game_state::get_variable_value(int variable_id) const {
+        return variables[variable_id];
+    }
+
     int game_state::get_current_player(void) const {
         return current_player;
     }
@@ -111,11 +127,13 @@ namespace reasoner {
                 auto white_pieces = __builtin_popcountll(pieces[1]);
                 if (black_pieces > white_pieces) {
                     variables[0] = 100;
-                    variables[1] = 0;
                 }
                 else if(white_pieces > black_pieces) {
-                    variables[0] = 0;
                     variables[1] = 100;
+                }
+                else {
+                    variables[0] = 50;
+                    variables[1] = 50;
                 }
             }
             else {
