@@ -1,6 +1,14 @@
 #include <cstdint>
 #include <vector>
 
+#include <boost/container/static_vector.hpp>
+
+
+union signed_unsigned {
+    int_fast32_t signed_int;
+    uint_fast32_t unsigned_int;
+};
+
 namespace reasoner {
     constexpr int BOARD_SIZE = 64;
     constexpr int NUMBER_OF_PLAYERS = 3;
@@ -9,12 +17,34 @@ namespace reasoner {
     constexpr int MONOTONIC_CLASSES = 0;
 
     class resettable_bitarray_stack {};
+    struct action_representation {
+        int index;
+        int cell;
+        action_representation(void) = default;
+        action_representation(uint_fast64_t move) {
+            signed_unsigned converter;
+            converter.unsigned_int = move >> 32;
+            index = converter.signed_int;
+            converter.unsigned_int = move & 0xFFFFFFFF;
+            cell = converter.signed_int;
+        }
+        action_representation(int index, int cell)
+        : index(index),
+          cell(cell) {}
+        bool operator==(const action_representation& rhs) const {
+            return index == rhs.index && cell == rhs.cell;
+        }
+    };
 
-    typedef uint64_t move_representation;
+    using move_representation = boost::container::static_vector<action_representation, 1>;
     struct move {
         move_representation mr;
+        move(const uint_fast64_t mv) : mr({action_representation(mv)}) {};
         move(const move_representation& mv) : mr(mv) {};
         move(void) = default;
+        bool operator==(const move& rhs) const {
+            return mr == rhs.mr;
+        }
     };
     class game_state {
         public:
@@ -28,12 +58,13 @@ namespace reasoner {
             int get_monotonicity_class(void);
             bool is_legal(const move& m) const;
         private:
-            inline uint64_t msb(const uint64_t&) const;
-            uint64_t empty = 0xFFFFFFFF0000;
-            uint64_t pieces[2] = {0xFFFF, 0xFFFF000000000000};
-            uint64_t last_row[2] = {0xFF00000000000000, 0xFF};
-            const uint64_t maskLD = 0xFEFEFEFEFEFEFEFE;
-            const uint64_t maskRD = 0x7F7F7F7F7F7F7F7F;
+            inline uint_fast64_t convert_to_uint(const action_representation action);
+            inline uint_fast64_t msb(const uint_fast64_t&) const;
+            uint_fast64_t empty = 0xFFFFFFFF0000;
+            uint_fast64_t pieces[2] = {0xFFFF, 0xFFFF000000000000};
+            uint_fast64_t last_row[2] = {0xFF00000000000000, 0xFF};
+            const uint_fast64_t maskLD = 0xFEFEFEFEFEFEFEFE;
+            const uint_fast64_t maskRD = 0x7F7F7F7F7F7F7F7F;
             int current_player = 1;
             int variables[2] = {0, 0};
     };

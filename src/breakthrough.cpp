@@ -28,8 +28,9 @@ namespace reasoner {
     void game_state::apply_move(const move& mv) {
         auto curr_id = current_player - 1;
         auto opp_id = current_player & 1;
-        pieces[curr_id] ^= mv.mr;
-        pieces[opp_id] &= ~mv.mr;
+        const auto move = convert_to_uint(mv.mr.front());
+        pieces[curr_id] ^= move;
+        pieces[opp_id] &= ~move;
         if (pieces[curr_id] & last_row[curr_id]) {
             variables[curr_id] = 100;
             current_player = 0;
@@ -47,19 +48,19 @@ namespace reasoner {
             uint64_t movers = pieces[0] & (empty >> 8);
             while (movers) {
                 auto piece = msb(movers);
-                moves.push_back(piece | piece << 8);
+                moves.emplace_back(piece | piece << 8);
                 movers ^= piece;
             }
             movers = pieces[0] & maskLD & (not_white >> 7);
             while (movers) {
                 auto piece = msb(movers);
-                moves.push_back(piece | piece << 7);
+                moves.emplace_back(piece | piece << 7);
                 movers ^= piece;
             }
             movers = pieces[0] & maskRD & (not_white >> 9);
             while (movers) {
                 auto piece = msb(movers);
-                moves.push_back(piece | piece << 9);
+                moves.emplace_back(piece | piece << 9);
                 movers ^= piece;
             }
         }
@@ -68,19 +69,19 @@ namespace reasoner {
             uint64_t movers = pieces[1] & (empty << 8);
             while (movers) {
                 auto piece = msb(movers);
-                moves.push_back(piece | piece >> 8);
+                moves.emplace_back(piece | piece >> 8);
                 movers ^= piece;
             }
             movers = pieces[1] & maskLD & (not_black << 9);
             while (movers) {
                 auto piece = msb(movers);
-                moves.push_back(piece | piece >> 9);
+                moves.emplace_back(piece | piece >> 9);
                 movers ^= piece;
             }
             movers = pieces[1] & maskRD & (not_black << 7);
             while (movers) {
                 auto piece = msb(movers);
-                moves.push_back(piece | piece >> 7);
+                moves.emplace_back(piece | piece >> 7);
                 movers ^= piece;
             }
         }
@@ -99,6 +100,14 @@ namespace reasoner {
 
     bool game_state::is_legal([[maybe_unused]] const move& m) const {
         return false;
+    }
+
+    inline uint_fast64_t game_state::convert_to_uint(const action_representation action) {
+        signed_unsigned index;
+        signed_unsigned cell;
+        index.signed_int = action.index;
+        cell.signed_int = action.cell;
+        return (static_cast<uint_fast64_t>(cell.unsigned_int) & 0xFFFFFFFF) | (index.unsigned_int << 32);
     }
 
     inline uint64_t game_state::msb(const uint64_t& pieces) const {
