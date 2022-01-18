@@ -41,6 +41,10 @@ namespace reasoner {
         empty = ~(pieces[0] | pieces[1]);
     }
 
+    void game_state::apply(const move& mv) {
+        apply_move(mv);
+    }
+
     void game_state::get_all_moves(resettable_bitarray_stack&, std::vector<move>& moves) {
         moves.clear();
         if (current_player == 1) {

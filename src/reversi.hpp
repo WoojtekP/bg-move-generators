@@ -23,6 +23,7 @@ namespace reasoner {
             int get_current_player(void) const;
             int get_player_score(int player_id) const;
             void apply_move(const move& m);
+            void apply(const move& m);
             void get_all_moves(resettable_bitarray_stack&, std::vector<move>& moves);
             bool apply_any_move(resettable_bitarray_stack&);
             int get_monotonicity_class(void);
