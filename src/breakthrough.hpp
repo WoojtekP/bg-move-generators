@@ -60,11 +60,11 @@ namespace reasoner {
         private:
             inline uint_fast64_t convert_to_uint(const action_representation action);
             inline uint_fast64_t msb(const uint_fast64_t&) const;
+            static constexpr uint_fast64_t maskLD = 0xFEFEFEFEFEFEFEFE;
+            static constexpr uint_fast64_t maskRD = 0x7F7F7F7F7F7F7F7F;
             uint_fast64_t empty = 0xFFFFFFFF0000;
             uint_fast64_t pieces[2] = {0xFFFF, 0xFFFF000000000000};
             uint_fast64_t last_row[2] = {0xFF00000000000000, 0xFF};
-            const uint_fast64_t maskLD = 0xFEFEFEFEFEFEFEFE;
-            const uint_fast64_t maskRD = 0x7F7F7F7F7F7F7F7F;
             int current_player = 1;
             int variables[2] = {0, 0};
     };

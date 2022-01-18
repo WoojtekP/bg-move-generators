@@ -64,7 +64,7 @@ namespace reasoner {
                 movers ^= piece;
             }
         }
-        else {
+        else if (current_player == 2) {
             uint64_t not_black = ~pieces[1];
             uint64_t movers = pieces[1] & (empty << 8);
             while (movers) {
