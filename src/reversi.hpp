@@ -1,6 +1,9 @@
 #include <cstdint>
 #include <vector>
 
+#include <boost/container/static_vector.hpp>
+
+
 namespace reasoner {
     constexpr int BOARD_SIZE = 64;
     constexpr int NUMBER_OF_PLAYERS = 3;
@@ -9,10 +12,24 @@ namespace reasoner {
     constexpr int MONOTONIC_CLASSES = 0;
 
     class resettable_bitarray_stack {};
+    struct action_representation {
+        int index;
+        int cell;
+        action_representation(void) = default;
+        action_representation(int index)
+        : index(index) {}
+        action_representation(int index, int cell)
+        : index(index),
+          cell(cell) {}
+        bool operator==(const action_representation& rhs) const {
+            return index == rhs.index && cell == rhs.cell;
+        }
+    };
 
-    typedef uint32_t move_representation;
+    using move_representation = boost::container::static_vector<action_representation, 1>;
     struct move {
         move_representation mr;
+        move(const int mv) : mr({action_representation(mv)}) {};
         move(const move_representation& mv) : mr(mv) {};
         move(void) = default;
     };
@@ -29,11 +46,11 @@ namespace reasoner {
             int get_monotonicity_class(void);
             bool is_legal(const move& m) const;
         private:
-            inline uint64_t get_movers(const uint64_t& current, const uint64_t& opponent) {
-                uint64_t flipped = up(current) & opponent;
+            inline uint_fast64_t get_movers(const uint_fast64_t& current, const uint_fast64_t& opponent) {
+                uint_fast64_t flipped = up(current) & opponent;
                 for (int j = 0; j < 5; ++j)
                     flipped |= up(flipped) & opponent;
-                uint64_t result = up(flipped) & empty;
+                uint_fast64_t result = up(flipped) & empty;
 
                 flipped = down(current) & opponent;
                 for (int j = 0; j < 5; ++j)
@@ -72,38 +89,38 @@ namespace reasoner {
 
                 return result;
             }
-            inline uint64_t up(const uint64_t& pieces) const {
+            inline uint_fast64_t up(const uint_fast64_t& pieces) const {
                 return pieces << 8;
             }
-            inline uint64_t down(const uint64_t& pieces) const {
+            inline uint_fast64_t down(const uint_fast64_t& pieces) const {
                 return pieces >> 8;
             }
-            inline uint64_t left(const uint64_t& pieces) const {
+            inline uint_fast64_t left(const uint_fast64_t& pieces) const {
                 return (pieces & 0x7F7F7F7F7F7F7F7Full) << 1;
             }
-            inline uint64_t right(const uint64_t& pieces) const {
+            inline uint_fast64_t right(const uint_fast64_t& pieces) const {
                 return (pieces & 0xFEFEFEFEFEFEFEFEull) >> 1; 
             }
-            inline uint64_t up_left(const uint64_t& pieces) const {
+            inline uint_fast64_t up_left(const uint_fast64_t& pieces) const {
                 return (pieces & 0x7F7F7F7F7F7F7F7Full) << 9;
             }
-            inline uint64_t up_right(const uint64_t& pieces) const {
+            inline uint_fast64_t up_right(const uint_fast64_t& pieces) const {
                 return (pieces & 0xFEFEFEFEFEFEFEFEull) << 7;
             }
-            inline uint64_t down_left(const uint64_t& pieces) const {
+            inline uint_fast64_t down_left(const uint_fast64_t& pieces) const {
                 return (pieces & 0x7F7F7F7F7F7F7F7Full) >> 7;
             }
-            inline uint64_t down_right(const uint64_t& pieces) const {
+            inline uint_fast64_t down_right(const uint_fast64_t& pieces) const {
                 return (pieces & 0xFEFEFEFEFEFEFEFEull) >> 9;
             }
-            inline uint32_t msb(const uint64_t& pieces) const {
+            inline int msb(const uint_fast64_t& pieces) const {
                 return 63 - __builtin_clzll(pieces);
             }
-            uint64_t pieces[2] = {
+            uint_fast64_t pieces[2] = {
                 0x1008000000ull,
                 0x0810000000ull
             };
-            uint64_t empty = 0xFFFFFFE7E7FFFFFFull;
+            uint_fast64_t empty = 0xFFFFFFE7E7FFFFFFull;
             int current_player = 1;
             int variables[2] = {0, 0};
     };

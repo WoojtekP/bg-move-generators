@@ -3,7 +3,7 @@
 namespace reasoner {
     int game_state::get_piece(int cell_id) const {
         // 0 -black, 1 - empty, 2 - white
-        const uint64_t cell_mask = 1ull << (cell_id - 1);
+        const uint_fast64_t cell_mask = 1ull << (cell_id - 1);
         if (pieces[0] & cell_mask) {
             return 2;
         }
@@ -26,18 +26,19 @@ namespace reasoner {
     }
 
     void game_state::apply_move(const move& mv) {
-        if (mv.mr == 64) {
+        const auto move = mv.mr.front().index;
+        if (move == 64) {
             current_player ^= 0b11;
             return;
         }
-        uint64_t move_mask = 1ull << mv.mr;
+        uint_fast64_t move_mask = 1ull << move;
         auto curr_id = current_player - 1;
         auto opp_id = current_player & 1;
         pieces[curr_id] ^= move_mask;
         empty ^= move_mask;
-        uint64_t flipped = 0;
-        uint64_t &current = pieces[curr_id];
-        uint64_t &opponent = pieces[opp_id];
+        uint_fast64_t flipped = 0;
+        uint_fast64_t &current = pieces[curr_id];
+        uint_fast64_t &opponent = pieces[opp_id];
 
         flipped = up(move_mask) & opponent;
         for (int j = 0; j < 5; ++j)
@@ -112,11 +113,14 @@ namespace reasoner {
 
     void game_state::get_all_moves(resettable_bitarray_stack&, std::vector<move>& moves) {
         moves.clear();
+        if (current_player == 0) {
+            return;
+        }
         auto curr_id = current_player - 1;
         auto opp_id = current_player & 1;
-        uint64_t current = pieces[curr_id];
-        uint64_t opponent = pieces[opp_id];
-        uint64_t result = get_movers(current, opponent);
+        uint_fast64_t current = pieces[curr_id];
+        uint_fast64_t opponent = pieces[opp_id];
+        uint_fast64_t result = get_movers(current, opponent);
 
         while (result) {
             auto piece = msb(result);
